@@ -1,8 +1,4 @@
 
-  # One Piece Theme Design
-
-  This is a code bundle for One Piece Theme Design. The original project is available at https://www.figma.com/design/brpk4SFQ1kck3TqCbwkwhS/One-Piece-Theme-Design.
-
   ## Running the code
 
   Run `npm i` to install the dependencies.
