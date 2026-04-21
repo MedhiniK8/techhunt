@@ -43,7 +43,9 @@ function Field({
 }) {
   return (
     <div>
-      <label className={labelCls}>{label}</label>
+      <label className={labelCls}>
+        {label} <span className="text-red-400 ml-1">*</span>
+      </label>
       <input
         type={type}
         value={value}
