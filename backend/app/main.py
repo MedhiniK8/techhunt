@@ -4,10 +4,15 @@ from app.routes.registration import router as registration_router
 
 app = FastAPI(title="Tech Hunt API")
 
+origins = [
+    "http://localhost:5173",
+    "https://codeclubtechhunt.onrender.com",
+]
+
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
