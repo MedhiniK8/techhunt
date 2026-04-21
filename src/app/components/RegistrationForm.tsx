@@ -7,6 +7,8 @@ import zoroImg from '../../imports/zoro.png';
 import namiImg from '../../imports/nami.png';
 import donebhaiImg from '../../imports/donebhai.png';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+
 interface RegistrationFormProps {
   onClose: () => void;
 }
@@ -115,7 +117,7 @@ export default function RegistrationForm({ onClose }: RegistrationFormProps) {
         ]
       };
 
-      const response = await fetch('http://127.0.0.1:8000/register', {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
