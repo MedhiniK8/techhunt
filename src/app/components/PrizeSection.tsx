@@ -10,7 +10,7 @@ export default function PrizeSection() {
       icon: Trophy,
       color: 'from-yellow-400 to-amber-500',
       glow: 'shadow-[0_0_50px_rgba(251,191,36,0.6)]',
-      scale: 1.12,
+      scaleClass: 'md:scale-[1.12]',
       amountGradient: '#fde68a, #fbbf24, #f59e0b',
       highlighted: true,
     },
@@ -20,7 +20,7 @@ export default function PrizeSection() {
       icon: Medal,
       color: 'from-gray-300 to-gray-400',
       glow: 'shadow-[0_0_40px_rgba(209,213,219,0.45)]',
-      scale: 1,
+      scaleClass: 'md:scale-100',
       amountGradient: '#d1d5db, #9ca3af',
       highlighted: false,
     },
@@ -30,7 +30,7 @@ export default function PrizeSection() {
       icon: Award,
       color: 'from-orange-400 to-orange-600',
       glow: 'shadow-[0_0_35px_rgba(251,146,60,0.45)]',
-      scale: 0.95,
+      scaleClass: 'md:scale-[0.95]',
       amountGradient: '#fb923c, #ea580c',
       highlighted: false,
     },
@@ -87,24 +87,29 @@ export default function PrizeSection() {
         </motion.div>
 
         {/* Podium grid: 2nd | 1st | 3rd — extra top padding for treasure chest */}
-        <div className="flex flex-col md:flex-row items-end justify-center gap-8 max-w-5xl mx-auto pt-[320px] md:pt-[340px]">
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-center gap-8 max-w-5xl mx-auto pt-[280px] md:pt-[340px]">
           {displayOrder.map((prize, i) => {
             const animDelay = i === 1 ? 0 : i === 0 ? 0.18 : 0.32;
+            
+            // Dynamic re-ordering for mobile vs desktop podium
+            const orderClass = 
+              prize.place === '1st Place' ? 'order-1 md:order-none' :
+              prize.place === '2nd Place' ? 'order-2 md:order-none' :
+              'order-3 md:order-none';
+
             return (
               <motion.div
                 key={prize.place}
-                className="relative w-full md:w-72"
+                className={`relative w-full max-w-sm md:w-72 ${orderClass} ${prize.scaleClass} origin-bottom`}
                 initial={{ opacity: 0, y: 55 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: animDelay, duration: 0.65 }}
-                style={{ transform: `scale(${prize.scale})`, transformOrigin: 'bottom center' }}
               >
                 {/* Glowing treasure chest above 1st place */}
                 {prize.highlighted && (
                   <motion.div
-                    className="absolute left-1/2 -translate-x-1/2 z-20"
-                    style={{ top: '-310px', width: '288px', height: '288px' }}
+                    className="absolute left-1/2 -translate-x-1/2 z-20 w-[240px] h-[240px] md:w-[288px] md:h-[288px] top-[-250px] md:top-[-310px]"
                     animate={{ y: [0, -12, 0] }}
                     transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
                   >
