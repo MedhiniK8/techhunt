@@ -199,13 +199,29 @@ export default function RegistrationForm({ onClose }: RegistrationFormProps) {
 
             {/* Subtitle */}
             <motion.p
-              className="font-['Manrope'] text-amber-200/80 text-lg leading-relaxed"
+              className="font-['Manrope'] text-amber-200/80 text-lg leading-relaxed mb-6"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45, duration: 0.45 }}
             >
               You're in! Let's make this hunt legendary!
             </motion.p>
+            
+            {/* WhatsApp Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.55, duration: 0.45 }}
+            >
+              <a
+                href="https://chat.whatsapp.com/HTNAwsUJZtd8p2n89AOeQl?mode=gi_t"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded-lg shadow-[0_0_15px_rgba(37,211,102,0.6)] hover:shadow-[0_0_25px_rgba(37,211,102,0.8)] transition-all uppercase tracking-widest text-sm inline-block"
+              >
+                Join Pirates
+              </a>
+            </motion.div>
 
             {/* Decorative dots */}
             <motion.div

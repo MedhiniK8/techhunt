@@ -10,6 +10,7 @@ import WhatsAppCTA from './components/WhatsAppCTA';
 import FooterSection from './components/FooterSection';
 import RegistrationForm from './components/RegistrationForm';
 import BackToTop from './components/BackToTop';
+import NavBar from './components/NavBar';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,13 +32,24 @@ export default function App() {
       ) : showRegistration ? (
         <RegistrationForm onClose={handleCloseRegistration} />
       ) : (
-        <div className="min-h-screen bg-[#0a0e1a] text-white overflow-x-hidden">
-          <HeroSection />
-          <EventMetaStrip />
+        <div className="min-h-screen bg-[#0a0e1a] text-white overflow-x-hidden relative">
+          <NavBar />
+          <div id="home">
+            <HeroSection onRegisterClick={handleRegisterClick} />
+          </div>
+          <div id="explore">
+            <EventMetaStrip />
+          </div>
           <CharacterCTASection onRegisterClick={handleRegisterClick} />
-          <PrizeSection />
-          <RulesSection />
-          <WhatsAppCTA />
+          <div id="prizes">
+            <PrizeSection />
+          </div>
+          <div id="rules">
+            <RulesSection />
+          </div>
+          <div id="community">
+            <WhatsAppCTA />
+          </div>
           <FooterSection />
           <BackToTop />
         </div>
