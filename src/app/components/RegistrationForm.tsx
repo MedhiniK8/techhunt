@@ -128,15 +128,25 @@ export default function RegistrationForm({ onClose }: RegistrationFormProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Registration failed');
+        let errMessage = 'Registration failed';
+        try {
+          const errData = await response.json();
+          if (errData && errData.detail) errMessage = errData.detail;
+        } catch (e) {}
+        throw new Error(errMessage);
       }
 
       alert("Registration successful");
       setIsSubmitting(false);
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert("Registration failed");
+      const msg = error.message || "Registration failed";
+      if (msg === "Sorry you are late. Registrations Closed!") {
+        toast.error(msg);
+      } else {
+        alert("Registration failed");
+      }
       setIsSubmitting(false);
     }
   };

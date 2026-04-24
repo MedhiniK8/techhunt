@@ -5,24 +5,44 @@ from fastapi.responses import StreamingResponse
 from app.db.database import registration_collection
 from app.schemas.registration_schema import RegistrationCreate
 from datetime import datetime, timezone
+import asyncio
 
 router = APIRouter()
+registration_lock = asyncio.Lock()
+
+@router.get("/status")
+async def get_registration_status():
+    count = await registration_collection.count_documents({})
+    return {"is_open": count < 107}
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_team(registration: RegistrationCreate):
-    # Convert incoming data to a dictionary
-    reg_dict = registration.model_dump()
-    
-    # Auto-generate timestamp
-    reg_dict["created_at"] = datetime.now(timezone.utc)
-    
-    # Store in MongoDB
-    result = await registration_collection.insert_one(reg_dict)
-    
-    if result.inserted_id:
-        return {"message": "Registration successful!"}
-    
-    raise HTTPException(status_code=500, detail="Failed to complete registration")
+    async with registration_lock:
+        # Pre-check
+        count = await registration_collection.count_documents({})
+        if count >= 107:
+            raise HTTPException(status_code=400, detail="Sorry you are late. Registrations Closed!")
+
+        # Convert incoming data to a dictionary
+        reg_dict = registration.model_dump()
+        
+        # Auto-generate timestamp
+        reg_dict["created_at"] = datetime.now(timezone.utc)
+        
+        # Store in MongoDB
+        result = await registration_collection.insert_one(reg_dict)
+        
+        if result.inserted_id:
+            # Post-check validation to enforce absolute ceiling across multiple workers
+            post_count = await registration_collection.count_documents({})
+            if post_count > 107:
+                # Rollback specific document
+                await registration_collection.delete_one({"_id": result.inserted_id})
+                raise HTTPException(status_code=400, detail="Sorry you are late. Registrations Closed!")
+                
+            return {"message": "Registration successful!"}
+        
+        raise HTTPException(status_code=500, detail="Failed to complete registration")
 
 @router.get("/registrations")
 async def get_registrations():

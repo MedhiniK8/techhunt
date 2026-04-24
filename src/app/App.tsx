@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 import LoadingScreen from './components/LoadingScreen';
 import HeroSection from './components/HeroSection';
 import EventMetaStrip from './components/EventMetaStrip';
@@ -21,7 +23,21 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleRegisterClick = () => setShowRegistration(true);
+  const handleRegisterClick = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/status`);
+      if (response.ok) {
+        const data = await response.json();
+        if (!data.is_open) {
+          toast.error("Sorry you are late. Registrations Closed!");
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn("Status check failed", err);
+    }
+    setShowRegistration(true);
+  };
   const handleCloseRegistration = () => setShowRegistration(false);
 
   return (
